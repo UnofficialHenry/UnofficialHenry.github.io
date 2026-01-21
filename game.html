@@ -10,8 +10,13 @@
      crossorigin="anonymous"></script>
   
   <style>
-    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { margin: 0; background: #0b1220; color: #e7eefc; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      margin: 0;
+      background: #0b1220;
+      color: #e7eefc;
+      font-family: Arial, sans-serif;
+    }
 
     .app {
       width: min(420px, 92vw);
@@ -21,8 +26,14 @@
       transform: translate(-50%, -50%);
     }
 
-    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    td { padding: 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    td {
+      padding: 0;
+    }
     .cell {
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -36,9 +47,61 @@
       place-items: center;
       user-select: none;
     }
-    .cell:hover { filter: brightness(1.12); }
-    .cell:disabled { cursor: not-allowed; opacity: .85; }
-    .win { outline: 3px solid #6aa6ff; outline-offset: -3px; }
+    .cell:hover {
+      filter: brightness(1.12);
+    }
+    .cell:disabled {
+      cursor: not-allowed;
+      opacity: .85;
+    }
+    .win {
+      outline: 3px solid #6aa6ff;
+      outline-offset: -3px;
+    }
+    .footer-bar{
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 250px;
+      max-width: calc(100vw - 24px);
+      background: #1a2750;
+      border: 2px solid rgba(255,255,255,0.8);
+      border-bottom: 0;
+      border-radius: 16px 16px 0 0;
+      padding: 2px 14px 4px;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      box-sizing: border-box;
+      backdrop-filter: blur(2px);
+    }
+    .footer-link{
+      color: #e7eefc;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+    .footer-link:hover{
+      background: rgba(255,255,255,0.12);
+    }
+    .footer-link:focus-visible{
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+    .footer-sep{
+      color: rgba(231,238,252,0.75);
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 2px;
+      user-select: none;
+    }
   </style>
 </head>
 
@@ -46,6 +109,12 @@
   <div class="app">
     <table id="board" aria-label="Tic Tac Toe board"></table>
   </div>
+
+  <footer class="footer-bar" aria-label="Site links">
+    <a class="footer-link" href="about.html">ABOUT</a>
+    <span class="footer-sep" aria-hidden="true">|</span>
+    <a class="footer-link" href="privacy.html">PRIVACY</a>
+  </footer>
 
   <script type="module">
     import Minimax from "https://esm.sh/tic-tac-toe-minimax@1.0.8";
@@ -124,7 +193,6 @@
       winningLine = result.line;
       render();
 
-      // small delay so the final move/line is visible before navigating
       setTimeout(() => {
         if (result.winner === "draw") return goToEndPage("draw");
         if (result.winner === huPlayer) return goToEndPage("won");
@@ -151,7 +219,6 @@
       let result = getWinner();
       if (result.winner) return endGame(result);
 
-      // AI move
       busy = true;
       render();
 
@@ -172,5 +239,6 @@
   </script>
 </body>
 </html>
+
 
 
