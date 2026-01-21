@@ -41,14 +41,61 @@
       outline: 3px solid white;
       outline-offset: 4px;
     }
+    .footer-bar{
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 250px;
+      max-width: calc(100vw - 24px);
+      background: rgba(0,0,0,0.55);
+      border: 2px solid rgba(255,255,255,0.8);
+      border-bottom: 0;
+      border-radius: 16px 16px 0 0;
+      padding: 2px 14px 4px;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      box-sizing: border-box;
+      backdrop-filter: blur(2px);
+    }
+    .footer-link{
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+    .footer-link:hover{
+      background: rgba(255,255,255,0.12);
+    }
+    .footer-link:focus-visible{
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+    .footer-sep{
+      color: rgba(255,255,255,0.75);
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 2px;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
   <div>
     <a class="play-btn" href="game.html">PLAY GAME</a>
   </div>
+
+  <footer class="footer-bar" aria-label="Site links">
+    <a class="footer-link" href="about.html">ABOUT</a>
+    <span class="footer-sep" aria-hidden="true">|</span>
+    <a class="footer-link" href="privacy.html">PRIVACY</a>
+  </footer>
 </body>
 </html>
-
-
-
