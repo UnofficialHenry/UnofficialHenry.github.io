@@ -4,14 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Game Over</title>
+  
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8163315423715705"
+     crossorigin="anonymous"></script>
+  
   <style>
     :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
     *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
-      height: 100vh;          /* full screen */
-      overflow: hidden;       /* prevent scrolling */
+      height: 100vh;
+      overflow: hidden;
       display: grid;
       place-items: center;
       background: #0b1220;
@@ -78,7 +84,7 @@
       resultText.style.color = "#2563EB";
     } else {
       resultText.textContent = "GAME OVER";
-      resultText.style.color = ""; // fallback to body color
+      resultText.style.color = "#FFFFFF";
     }
 
     document.getElementById("playAgain").addEventListener("click", () => {
@@ -87,3 +93,4 @@
   </script>
 </body>
 </html>
+
