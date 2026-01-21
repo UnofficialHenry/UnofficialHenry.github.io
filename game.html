@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tic Tac Toe</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e7eefc; }
+
+    .app {
+      width: min(420px, 92vw);
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    td { padding: 0; }
+    .cell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #0f1730;
+      border: 1px solid #2a3a66;
+      color: #e7eefc;
+      font-size: clamp(34px, 8vw, 56px);
+      font-weight: 700;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      user-select: none;
+    }
+    .cell:hover { filter: brightness(1.12); }
+    .cell:disabled { cursor: not-allowed; opacity: .85; }
+    .win { outline: 3px solid #6aa6ff; outline-offset: -3px; }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <table id="board" aria-label="Tic Tac Toe board"></table>
+  </div>
+
+  <script type="module">
+    import Minimax from "https://esm.sh/tic-tac-toe-minimax@1.0.8";
+    const { ComputerMove } = Minimax;
+
+    const huPlayer = "X";
+    const aiPlayer = "O";
+    const symbols = { huPlayer, aiPlayer };
+    const DIFFICULTY = "Easy";
+
+    const $board = document.getElementById("board");
+
+    const WIN_LINES = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6],
+    ];
+
+    let board;
+    let gameOver;
+    let busy;
+    let winningLine = null;
+
+    function isEmptyCell(v) { return typeof v === "number"; }
+
+    function buildBoardOnce() {
+      if ($board.hasChildNodes()) return;
+      for (let r = 0; r < 3; r++) {
+        const tr = document.createElement("tr");
+        for (let c = 0; c < 3; c++) {
+          const idx = r * 3 + c;
+          const td = document.createElement("td");
+          const btn = document.createElement("button");
+          btn.className = "cell";
+          btn.type = "button";
+          btn.dataset.index = String(idx);
+          btn.setAttribute("aria-label", `Cell ${idx + 1}`);
+          btn.addEventListener("click", onHumanMove);
+          td.appendChild(btn);
+          tr.appendChild(td);
+        }
+        $board.appendChild(tr);
+      }
+    }
+
+    function render() {
+      buildBoardOnce();
+      const buttons = $board.querySelectorAll(".cell");
+      buttons.forEach((btn) => {
+        const idx = Number(btn.dataset.index);
+        const v = board[idx];
+        btn.textContent = isEmptyCell(v) ? "" : v;
+        btn.disabled = gameOver || busy || !isEmptyCell(v);
+        btn.classList.toggle("win", Boolean(winningLine && winningLine.includes(idx)));
+      });
+    }
+
+    function getWinner() {
+      for (const line of WIN_LINES) {
+        const [a,b,c] = line;
+        if (!isEmptyCell(board[a]) && board[a] === board[b] && board[a] === board[c]) {
+          return { winner: board[a], line };
+        }
+      }
+      if (!board.some(isEmptyCell)) return { winner: "draw", line: null };
+      return { winner: null, line: null };
+    }
+
+    function goToEndPage(result) {
+      // result: "won" | "lost" | "draw"
+      window.location.href = `end.html?result=${encodeURIComponent(result)}`;
+    }
+
+    function endGame(result) {
+      gameOver = true;
+      winningLine = result.line;
+      render();
+
+      // small delay so the final move/line is visible before navigating
+      setTimeout(() => {
+        if (result.winner === "draw") return goToEndPage("draw");
+        if (result.winner === huPlayer) return goToEndPage("won");
+        return goToEndPage("lost");
+      }, 450);
+    }
+
+    function newGame() {
+      board = Array.from({ length: 9 }, (_, i) => i);
+      gameOver = false;
+      busy = false;
+      winningLine = null;
+      render();
+    }
+
+    function onHumanMove(e) {
+      if (gameOver || busy) return;
+
+      const idx = Number(e.currentTarget.dataset.index);
+      if (!isEmptyCell(board[idx])) return;
+
+      board[idx] = huPlayer;
+
+      let result = getWinner();
+      if (result.winner) return endGame(result);
+
+      // AI move
+      busy = true;
+      render();
+
+      setTimeout(() => {
+        const aiIdx = ComputerMove(board, symbols, DIFFICULTY);
+        if (typeof aiIdx === "number" && isEmptyCell(board[aiIdx])) {
+          board[aiIdx] = aiPlayer;
+        }
+
+        busy = false;
+        result = getWinner();
+        if (result.winner) endGame(result);
+        else render();
+      }, 80);
+    }
+
+    newGame();
+  </script>
+</body>
+</html>
